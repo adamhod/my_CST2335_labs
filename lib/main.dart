@@ -32,11 +32,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   double _counter = 0.0;
+  double myFontSize = 30.0;
 
   void setNewValue(double value)
   {
     setState(() {
       _counter = value;
+      myFontSize = value;
     });
   }
 
@@ -58,12 +60,17 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
+            Text(
               'You have pushed the button this many times:',
+              style: TextStyle(
+                fontSize: myFontSize,
+              ),
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: TextStyle(
+                fontSize: myFontSize,
+              ),
             ),
             Slider(
                 value:_counter, max:100.0, onChanged: setNewValue, min:0.0
