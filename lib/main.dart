@@ -33,6 +33,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   double _counter = 0.0;
   double myFontSize = 30.0;
+  late TextEditingController _loginController;
+  late TextEditingController _passwordController;
 
   void setNewValue(double value)
   {
@@ -49,6 +51,22 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  @override //same as in java
+  void initState() {
+    super.initState(); //call the parent initState()
+    _loginController = TextEditingController();//our late constructor
+    _passwordController = TextEditingController();
+  }
+
+
+  @override
+  void dispose()
+  {
+    super.dispose();
+    _loginController.dispose();    // clean up memory
+    _passwordController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,21 +78,22 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-              style: TextStyle(
-                fontSize: myFontSize,
+
+            TextField(
+              controller: _loginController,
+              decoration: InputDecoration(
+                labelText: "Login",
+                border: OutlineInputBorder(),
+              )
+            ),
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(
+                labelText: "Password",
+                border: OutlineInputBorder(),
               ),
-            ),
-            Text(
-              '$_counter',
-              style: TextStyle(
-                fontSize: myFontSize,
-              ),
-            ),
-            Slider(
-                value:_counter, max:100.0, onChanged: setNewValue, min:0.0
-            ),
+                obscureText:true
+            )
           ],
         ),
       ),
