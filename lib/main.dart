@@ -67,6 +67,15 @@ class _MyHomePageState extends State<MyHomePage> {
     _passwordController.dispose();
   }
 
+  void buttonClicked(){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Password: ${_passwordController.text}'),
+      ),
+    );
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,7 +102,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 border: OutlineInputBorder(),
               ),
                 obscureText:true
-            )
+            ),
+            ElevatedButton(
+                onPressed: buttonClicked,
+                child:  Text("Login")
+            ),
+            Image.asset(
+              "images/img.png",
+              width: 300,
+              height: 300,
+            ),
           ],
         ),
       ),
