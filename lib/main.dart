@@ -35,6 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
   double myFontSize = 30.0;
   late TextEditingController _loginController;
   late TextEditingController _passwordController;
+  String _imagePath = "images/img.png";
 
   void setNewValue(double value)
   {
@@ -68,13 +69,23 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void buttonClicked(){
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Password: ${_passwordController.text}'),
-      ),
-    );
-
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Password: ${_passwordController.text}'),
+        ),
+      );
   }
+
+  void _handlePasswordSubmission(String password) {
+    setState(() {
+      if (password == "QWERTY123") {
+        _imagePath = "images/img_1.png"; // Path to the first image
+      } else {
+        _imagePath = "images/img_2.png"; // Path to the second image
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -101,14 +112,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 labelText: "Password",
                 border: OutlineInputBorder(),
               ),
-                obscureText:true
+                obscureText:true,
+              onSubmitted: _handlePasswordSubmission,
             ),
             ElevatedButton(
                 onPressed: buttonClicked,
                 child:  Text("Login")
             ),
             Image.asset(
-              "images/img.png",
+              _imagePath,
               width: 300,
               height: 300,
             ),
