@@ -31,58 +31,45 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  double _counter = 0.0;
-  double myFontSize = 30.0;
-
-  void setNewValue(double value)
-  {
-    setState(() {
-      _counter = value;
-      myFontSize = value;
-    });
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      if (_counter < 99.0)
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+
             Text(
-              'You have pushed the button this many times:',
-              style: TextStyle(
-                fontSize: myFontSize,
-              ),
+                "Brows Catagories", style: TextStyle(
+                fontSize: 50, fontWeight: FontWeight.bold)
             ),
+            Text(" "),
             Text(
-              '$_counter',
-              style: TextStyle(
-                fontSize: myFontSize,
-              ),
+                "Not sure about exactly which recipe you're looking for? Do a search,"
+                    " or dive into our most popular catagories"
             ),
-            Slider(
-                value:_counter, max:100.0, onChanged: setNewValue, min:0.0
+            Text(" "),
+            Text(
+                "By Meat", style: TextStyle(
+                fontSize: 35, fontWeight: FontWeight.bold)
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Stack(
+                      children: <Widget>[
+                        Image.asset("images/beef.jpg"),
+                        Text(
+                          "BEEF", style: TextStyle(fontSize: 10.0, backgroundColor:Colors.white ),
+                        )
+                      ]),
+
+                ]
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
