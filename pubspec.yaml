@@ -68,6 +68,10 @@ flutter:
     - images/salad.webp
     - images/seaFood.jpeg
     - images/sideDishes.webp
+    - images/brownies.webp
+    - images/cookies.webp
+    - images/iceCream.webp
+    - images/pies.webp
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

@@ -35,6 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset : false,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -51,20 +52,267 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(" "),
             Text(
-                "By Meat", style: TextStyle(
+                "BY MEAT", style: TextStyle(
                 fontSize: 35, fontWeight: FontWeight.bold)
             ),
+            Text(" "),
             Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Stack(
-                      children: <Widget>[
-                        Image.asset("images/beef.jpg"),
+                    alignment: Alignment.center,
+                      children: [
+                        ClipOval(
+                          child: Image.asset(
+                            "images/beef.jpeg",
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                         Text(
-                          "BEEF", style: TextStyle(fontSize: 10.0, backgroundColor:Colors.white ),
-                        )
+                          "BEEF",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
                       ]),
-
+                  Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ClipOval(
+                          child: Image.asset(
+                            "images/chicken.webp",
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Text(
+                          "CHICKEN",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ]),
+                  Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ClipOval(
+                          child: Image.asset(
+                            "images/pork.webp",
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Text(
+                          "PORK",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ]),
+                  Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ClipOval(
+                          child: Image.asset(
+                            "images/seafood.jpeg",
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Text(
+                          "SEAFOOD",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ]),
+                ]
+            ),
+            Text(" "),
+            Text(
+                "BY COURSE", style: TextStyle(
+                fontSize: 35, fontWeight: FontWeight.bold)
+            ),
+            Text(" "),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Column( mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ClipOval(
+                          child: Image.asset(
+                            "images/mainDishes.jpeg",
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Text(
+                          "Main Dishes",
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ]
+                  ),
+                  Column( mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ClipOval(
+                          child: Image.asset(
+                            "images/salad.webp",
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Text(
+                          "Salad Recipes",
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ]
+                  ),
+                  Column( mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ClipOval(
+                          child: Image.asset(
+                            "images/sideDishes.webp",
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Text(
+                          "Side Dishes",
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ]
+                  ),
+                  Column( mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ClipOval(
+                          child: Image.asset(
+                            "images/crockPot.webp",
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Text(
+                          "Crockpot",
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ]
+                  ),
+                ]
+            ),
+            Text(" "),
+            Text(
+                "BY DESSERT", style: TextStyle(
+                fontSize: 35, fontWeight: FontWeight.bold)
+            ),
+            Text(" "),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Column( mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ClipOval(
+                          child: Image.asset(
+                            "images/iceCream.webp",
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Text(
+                          "Ice Cream",
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ]
+                  ),
+                  Column( mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ClipOval(
+                          child: Image.asset(
+                            "images/brownies.webp",
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Text(
+                          "Brownies",
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ]
+                  ),
+                  Column( mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ClipOval(
+                          child: Image.asset(
+                            "images/pies.webp",
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Text(
+                          "Pies",
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ]
+                  ),
+                  Column( mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ClipOval(
+                          child: Image.asset(
+                            "images/cookies.webp",
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Text(
+                          "Cookies",
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ]
+                  ),
                 ]
             ),
           ],
