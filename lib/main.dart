@@ -45,17 +45,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 "Brows Catagories", style: TextStyle(
                 fontSize: 50, fontWeight: FontWeight.bold)
             ),
-            Text(" "),
+            SizedBox(height: 20),
             Text(
                 "Not sure about exactly which recipe you're looking for? Do a search,"
                     " or dive into our most popular catagories"
             ),
-            Text(" "),
+          SizedBox(height: 20),
             Text(
                 "BY MEAT", style: TextStyle(
                 fontSize: 35, fontWeight: FontWeight.bold)
             ),
-            Text(" "),
+            SizedBox(height: 20),
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
@@ -141,17 +141,18 @@ class _MyHomePageState extends State<MyHomePage> {
                       ]),
                 ]
             ),
-            Text(" "),
+            SizedBox(height: 20),
             Text(
                 "BY COURSE", style: TextStyle(
                 fontSize: 35, fontWeight: FontWeight.bold)
             ),
-            Text(" "),
+            SizedBox(height: 20),
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Column( mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
+                  Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
                         ClipOval(
                           child: Image.asset(
                             "images/mainDishes.jpeg",
@@ -164,13 +165,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           "Main Dishes",
                           style: TextStyle(
                             fontSize: 24,
+                            fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
                         ),
-                      ]
-                  ),
-                  Column( mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
+                      ]),
+                  Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
                         ClipOval(
                           child: Image.asset(
                             "images/salad.webp",
@@ -183,13 +185,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           "Salad Recipes",
                           style: TextStyle(
                             fontSize: 24,
+                            fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
                         ),
-                      ]
-                  ),
-                  Column( mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
+                      ]),
+                  Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
                         ClipOval(
                           child: Image.asset(
                             "images/sideDishes.webp",
@@ -202,16 +205,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           "Side Dishes",
                           style: TextStyle(
                             fontSize: 24,
+                            fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
                         ),
-                      ]
-                  ),
-                  Column( mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
+                      ]),
+                  Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
                         ClipOval(
                           child: Image.asset(
-                            "images/crockPot.webp",
+                            "images/crockpot.webp",
                             width: 150,
                             height: 150,
                             fit: BoxFit.cover,
@@ -221,19 +225,18 @@ class _MyHomePageState extends State<MyHomePage> {
                           "Crockpot",
                           style: TextStyle(
                             fontSize: 24,
+                            fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
                         ),
-                      ]
-                  ),
-                ]
-            ),
-            Text(" "),
+                      ]),
+          ]),
+            SizedBox(height: 20),
             Text(
                 "BY DESSERT", style: TextStyle(
                 fontSize: 35, fontWeight: FontWeight.bold)
             ),
-            Text(" "),
+            SizedBox(height: 20),
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
