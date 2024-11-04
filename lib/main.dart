@@ -43,6 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _loginController = TextEditingController();
     _passwordController = TextEditingController();
+    _loadSavedData();
   }
 
   @override
@@ -50,6 +51,36 @@ class _MyHomePageState extends State<MyHomePage> {
     _loginController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  // Method to load saved username and password on app start
+  void _loadSavedData() async {
+    String? savedUsername = await _encryptedPrefs.getString("username");
+    String? savedPassword = await _encryptedPrefs.getString("password");
+
+    if (savedUsername != null && savedPassword != null) {
+      setState(() {
+        _loginController.text = savedUsername;
+        _passwordController.text = savedPassword;
+      });
+
+      // Show SnackBar with "Undo" action
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text("Previous login name and password loaded."),
+          action: SnackBarAction(
+            label: "Undo",
+            onPressed: () {
+              // Clear the TextFields but keep the saved data in SharedPreferences
+              setState(() {
+                _loginController.text = "";
+                _passwordController.text = "";
+              });
+            },
+          ),
+        ),
+      );
+    }
   }
 
   void _incrementCounter() {
@@ -69,7 +100,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _handleLogin() {
-    // Display the dialog when login button is clicked
     _showOptionsDialog();
   }
 
@@ -84,10 +114,9 @@ class _MyHomePageState extends State<MyHomePage> {
             TextButton(
               child: const Text("Save"),
               onPressed: () async {
-                // Save username and password
                 await _encryptedPrefs.setString("username", _loginController.text);
                 await _encryptedPrefs.setString("password", _passwordController.text);
-                Navigator.of(context).pop(); // Close dialog
+                Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Information saved.")),
                 );
@@ -96,10 +125,9 @@ class _MyHomePageState extends State<MyHomePage> {
             TextButton(
               child: const Text("Delete"),
               onPressed: () async {
-                // Clear saved username and password
                 await _encryptedPrefs.remove("username");
                 await _encryptedPrefs.remove("password");
-                Navigator.of(context).pop(); // Close dialog
+                Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Information deleted.")),
                 );
@@ -108,10 +136,9 @@ class _MyHomePageState extends State<MyHomePage> {
             TextButton(
               child: const Text("Cancel"),
               onPressed: () async {
-                // Clear saved username and password (similar to "Delete")
                 await _encryptedPrefs.remove("username");
                 await _encryptedPrefs.remove("password");
-                Navigator.of(context).pop(); // Close dialog
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -169,3 +196,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
