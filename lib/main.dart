@@ -1,4 +1,6 @@
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,6 +38,23 @@ class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController _loginController;
   late TextEditingController _passwordController;
   String _imagePath = "images/img.png";
+  SharedPreferences? _prefs;
+
+
+
+  void _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+    _setPrefs();
+  }
+
+  void _setPrefs() {
+    _prefs?.setString("loginName","_loginController");
+
+  }
+
+  void _getPrefs() {
+    _prefs?.getString("loginName");
+  }
 
   void setNewValue(double value)
   {
@@ -57,8 +76,26 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState(); //call the parent initState()
     _loginController = TextEditingController();//our late constructor
     _passwordController = TextEditingController();
+    _initPrefs();
   }
 
+  Widget yesButton = TextButton(
+    child: Text("Yes"),
+    onPressed:  () {
+      EncryptedSharedPreferences prefs = EncryptedSharedPreferences();
+      prefs.getString("Name").then( (name) {
+        if(name.isNotEmpty){
+          //show a Snackbar
+        }
+      });
+
+    },
+  );
+
+  Widget noButton = TextButton(
+    child: Text("No"),
+    onPressed:  () {},
+  );
 
   @override
   void dispose()
@@ -74,6 +111,18 @@ class _MyHomePageState extends State<MyHomePage> {
           content: Text('Password: ${_passwordController.text}'),
         ),
       );
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text(""),
+          content: const Text('Would you like to save your '
+              'username and password?'),
+          actions: <Widget>[
+            yesButton,
+            noButton,
+          ],
+        ),
+      );
   }
 
   void _handlePasswordSubmission(String password) {
@@ -84,6 +133,16 @@ class _MyHomePageState extends State<MyHomePage> {
         _imagePath = "images/img_2.png"; // Path to the second image
       }
     });
+  }
+
+  // Load and obtain the shared preferences for this app.
+  void functionName() async {
+    final prefs = await SharedPreferences.getInstance();
+  }
+
+  void _handleLogin() {
+    String name = _loginController.text.trim();
+    String password = _passwordController.text;
   }
 
 
@@ -116,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onSubmitted: _handlePasswordSubmission,
             ),
             ElevatedButton(
-                onPressed: buttonClicked,
+                onPressed: _handleLogin,
                 child:  Text("Login")
             ),
             Image.asset(
@@ -132,6 +191,37 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed:  () {},
+    );
+    Widget continueButton = TextButton(
+      child: Text("Continue"),
+      onPressed:  () {},
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("AlertDialog"),
+      content: Text("Would you like to continue learning how to use Flutter alerts?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }
