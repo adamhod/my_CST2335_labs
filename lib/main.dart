@@ -1,6 +1,5 @@
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,7 +8,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,113 +36,89 @@ class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController _loginController;
   late TextEditingController _passwordController;
   String _imagePath = "images/img.png";
-  SharedPreferences? _prefs;
+  final EncryptedSharedPreferences _encryptedPrefs = EncryptedSharedPreferences();
 
-
-
-  void _initPrefs() async {
-    _prefs = await SharedPreferences.getInstance();
-    _setPrefs();
+  @override
+  void initState() {
+    super.initState();
+    _loginController = TextEditingController();
+    _passwordController = TextEditingController();
   }
 
-  void _setPrefs() {
-    _prefs?.setString("loginName","_loginController");
-
-  }
-
-  void _getPrefs() {
-    _prefs?.getString("loginName");
-  }
-
-  void setNewValue(double value)
-  {
-    setState(() {
-      _counter = value;
-      myFontSize = value;
-    });
+  @override
+  void dispose() {
+    _loginController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   void _incrementCounter() {
     setState(() {
-      if (_counter < 99.0)
-      _counter++;
+      if (_counter < 99.0) _counter++;
     });
-  }
-
-  @override //same as in java
-  void initState() {
-    super.initState(); //call the parent initState()
-    _loginController = TextEditingController();//our late constructor
-    _passwordController = TextEditingController();
-    _initPrefs();
-  }
-
-  Widget yesButton = TextButton(
-    child: Text("Yes"),
-    onPressed:  () {
-      EncryptedSharedPreferences prefs = EncryptedSharedPreferences();
-      prefs.getString("Name").then( (name) {
-        if(name.isNotEmpty){
-          //show a Snackbar
-        }
-      });
-
-    },
-  );
-
-  Widget noButton = TextButton(
-    child: Text("No"),
-    onPressed:  () {},
-  );
-
-  @override
-  void dispose()
-  {
-    super.dispose();
-    _loginController.dispose();    // clean up memory
-    _passwordController.dispose();
-  }
-
-  void buttonClicked(){
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Password: ${_passwordController.text}'),
-        ),
-      );
-      showDialog<String>(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text(""),
-          content: const Text('Would you like to save your '
-              'username and password?'),
-          actions: <Widget>[
-            yesButton,
-            noButton,
-          ],
-        ),
-      );
   }
 
   void _handlePasswordSubmission(String password) {
     setState(() {
       if (password == "QWERTY123") {
-        _imagePath = "images/img_1.png"; // Path to the first image
+        _imagePath = "images/img_1.png";
       } else {
-        _imagePath = "images/img_2.png"; // Path to the second image
+        _imagePath = "images/img_2.png";
       }
     });
   }
 
-  // Load and obtain the shared preferences for this app.
-  void functionName() async {
-    final prefs = await SharedPreferences.getInstance();
-  }
-
   void _handleLogin() {
-    String name = _loginController.text.trim();
-    String password = _passwordController.text;
+    // Display the dialog when login button is clicked
+    _showOptionsDialog();
   }
 
+  void _showOptionsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Save User Information?'),
+          content: const Text('Would you like to save your username and password?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Save"),
+              onPressed: () async {
+                // Save username and password
+                await _encryptedPrefs.setString("username", _loginController.text);
+                await _encryptedPrefs.setString("password", _passwordController.text);
+                Navigator.of(context).pop(); // Close dialog
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Information saved.")),
+                );
+              },
+            ),
+            TextButton(
+              child: const Text("Delete"),
+              onPressed: () async {
+                // Clear saved username and password
+                await _encryptedPrefs.remove("username");
+                await _encryptedPrefs.remove("password");
+                Navigator.of(context).pop(); // Close dialog
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Information deleted.")),
+                );
+              },
+            ),
+            TextButton(
+              child: const Text("Cancel"),
+              onPressed: () async {
+                // Clear saved username and password (similar to "Delete")
+                await _encryptedPrefs.remove("username");
+                await _encryptedPrefs.remove("password");
+                Navigator.of(context).pop(); // Close dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,26 +131,27 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-
             TextField(
               controller: _loginController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: "Login",
                 border: OutlineInputBorder(),
-              )
+              ),
             ),
+            const SizedBox(height: 16),
             TextField(
               controller: _passwordController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: "Password",
                 border: OutlineInputBorder(),
               ),
-                obscureText:true,
+              obscureText: true,
               onSubmitted: _handlePasswordSubmission,
             ),
+            const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _handleLogin,
-                child:  Text("Login")
+              onPressed: _handleLogin,
+              child: const Text("Login"),
             ),
             Image.asset(
               _imagePath,
@@ -190,38 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-
-  showAlertDialog(BuildContext context) {
-
-    // set up the buttons
-    Widget cancelButton = TextButton(
-      child: Text("Cancel"),
-      onPressed:  () {},
-    );
-    Widget continueButton = TextButton(
-      child: Text("Continue"),
-      onPressed:  () {},
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("AlertDialog"),
-      content: Text("Would you like to continue learning how to use Flutter alerts?"),
-      actions: [
-        cancelButton,
-        continueButton,
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
+      ),
     );
   }
 }
