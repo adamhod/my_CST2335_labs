@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 "Not sure about exactly which recipe you're looking for? Do a search,"
                     " or dive into our most popular catagories"
             ),
-          SizedBox(height: 20),
+            SizedBox(height: 20),
             Text(
                 "BY MEAT", style: TextStyle(
                 fontSize: 35, fontWeight: FontWeight.bold)
@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Stack(
-                    alignment: Alignment.center,
+                      alignment: Alignment.center,
                       children: [
                         ClipOval(
                           child: Image.asset(
@@ -230,7 +230,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                       ]),
-          ]),
+                ]),
             SizedBox(height: 20),
             Text(
                 "BY DESSERT", style: TextStyle(
