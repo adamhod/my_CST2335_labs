@@ -74,6 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
           content: Text('Password: ${_passwordController.text}'),
         ),
       );
+      _handlePasswordSubmission()
   }
 
   void _handlePasswordSubmission(String password) {
