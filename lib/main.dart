@@ -37,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       resizeToAvoidBottomInset : false,
       body: Center(
+        child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -319,7 +320,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ]
             ),
           ],
-        ),
+        )),
       ),
     );
   }
