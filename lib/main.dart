@@ -145,6 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       },
     );
+    _handlePasswordSubmission(_passwordController.text);
   }
 
   @override
