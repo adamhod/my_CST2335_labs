@@ -1,5 +1,6 @@
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'OtherPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,6 +18,10 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    initialRoute: '/',  // The default (starting) route
+    routes: {
+        '/otherPage': (context) => OtherPage(), // Profile page
+      },
     );
   }
 }
@@ -100,7 +105,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _handleLogin() {
+    Navigator.pushNamed(context, 'otherPage');
     _showOptionsDialog();
+
   }
 
   void _showOptionsDialog() {
