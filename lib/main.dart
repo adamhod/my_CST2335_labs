@@ -106,7 +106,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _handleLogin() {
     Navigator.pushNamed(context, 'otherPage');
-    _showOptionsDialog();
+    //_showOptionsDialog();
+    //_handlePasswordSubmission(_passwordController.text);
 
   }
 
@@ -152,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       },
     );
-    _handlePasswordSubmission(_passwordController.text);
+    //_handlePasswordSubmission(_passwordController.text);
   }
 
   @override
