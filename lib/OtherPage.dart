@@ -13,7 +13,23 @@ class OtherPageState extends State<OtherPage> {
         body: Center(child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: "First Name",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              Row(
+                children: <Widget>[
+                  TextField(
+                    decoration: const InputDecoration(
+                      labelText: "Phone Number",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
 
+                ]
+              ),
             ]
         ),
         )
