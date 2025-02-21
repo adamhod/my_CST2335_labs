@@ -88,12 +88,14 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  //increments the counter
   void _incrementCounter() {
     setState(() {
       if (_counter < 99.0) _counter++;
     });
   }
 
+  //checks if password matches
   void _handlePasswordSubmission(String password) {
     setState(() {
       if (password == "QWERTY123") {
@@ -104,13 +106,31 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  //what happens when login button is clicked
   void _handleLogin() {
-    Navigator.pushNamed(context, 'otherPage');
-    //_showOptionsDialog();
+    //Navigator.pushNamed(context, '/otherPage'); // brings to other page
+    _showOptionsDialog();
     //_handlePasswordSubmission(_passwordController.text);
+
 
   }
 
+  //handles details of logging in
+  void _otherPageLogin(String password) {
+    if (password == "QWERTY123") {
+      Navigator.pushNamed(context, '/otherPage');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Login successful")),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Incorrect password.")),
+      );
+    }
+
+  }
+
+  // lab 4
   void _showOptionsDialog() {
     showDialog(
       context: context,
@@ -125,6 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 await _encryptedPrefs.setString("username", _loginController.text);
                 await _encryptedPrefs.setString("password", _passwordController.text);
                 Navigator.of(context).pop();
+                _otherPageLogin(_passwordController.text);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Information saved.")),
                 );

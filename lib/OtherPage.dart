@@ -10,7 +10,13 @@ class OtherPageState extends State<OtherPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text('Other Page')),
-        body: Center(child: Text('Welcome to Other Page!'))
+        body: Center(child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+
+            ]
+        ),
+        )
     ); //Use a Scaffold to layout a page with an AppBar and main body region
   }
 }
