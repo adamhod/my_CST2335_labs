@@ -1,13 +1,20 @@
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'OtherPage.dart';
+import 'user_repository.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter binding is ready
+  UserRepository userRepository = UserRepository();
+  await userRepository.loadData(); // Load stored data before app starts
+
+  runApp(MyApp(userRepository: userRepository));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final UserRepository userRepository;
+
+  const MyApp({Key? key, required this.userRepository}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,19 +24,19 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     initialRoute: '/',  // The default (starting) route
     routes: {
-        '/otherPage': (context) => OtherPage(), // Profile page
-      },
+      '/': (context) => MyHomePage(title: 'Flutter Demo Home Page', userRepository: userRepository),
+      '/otherPage': (context) => OtherPage(userRepository: userRepository),      },
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
   final String title;
+  final UserRepository userRepository;
+
+  const MyHomePage({Key? key, required this.title, required this.userRepository}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
