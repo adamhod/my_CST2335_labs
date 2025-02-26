@@ -53,10 +53,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _loginController = TextEditingController(text: widget.userRepository.firstName);
-    _passwordController = TextEditingController(text: widget.userRepository.lastName);
+    _loginController = TextEditingController();
+    _passwordController = TextEditingController();
     // Load data asynchronously
-    _loadData();
+    _loadSavedData();
   }
 
   Future<void> _loadData() async {
@@ -114,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  //checks if password matches
+  //checks if password matches to set apropreate image
   void _handlePasswordSubmission(String password) {
     setState(() {
       if (password == "QWERTY123") {
@@ -137,15 +137,30 @@ class _MyHomePageState extends State<MyHomePage> {
   void _otherPageLogin(String password) {
     if (password == "QWERTY123") {
       Navigator.pushNamed(context, '/otherPage');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Login successful")),
-      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Incorrect password.")),
       );
     }
 
+  }
+
+  void _showWelcomeSnackBar() async {
+    // Retrieve the saved username from EncryptedSharedPreferences
+    String? savedUsername = await _encryptedPrefs.getString("username");
+
+    // Check if the username exists
+    String message = (savedUsername != null && savedUsername.isNotEmpty)
+        ? "Welcome, $savedUsername!"
+        : "Welcome, Guest!";
+
+    // Show SnackBar with dynamic message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 3),
+      ),
+    );
   }
 
   // lab 4
@@ -164,9 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 await _encryptedPrefs.setString("password", _passwordController.text);
                 Navigator.of(context).pop();
                 _otherPageLogin(_passwordController.text);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Information saved.")),
-                );
+                _showWelcomeSnackBar();
               },
             ),
             TextButton(

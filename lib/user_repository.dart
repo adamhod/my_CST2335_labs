@@ -3,10 +3,10 @@ import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 class UserRepository {
   final EncryptedSharedPreferences _encryptedPrefs = EncryptedSharedPreferences();
 
-  String firstName = 'adam';
-  String lastName = 'hoddinott';
-  String phoneNumber = '555-555-5555';
-  String email = 'adam@go.com';
+  String firstName = '';
+  String lastName = '';
+  String phoneNumber = '';
+  String email = '';
 
   // Load user data from EncryptedSharedPreferences
   Future<void> loadData() async {

@@ -23,10 +23,10 @@ class OtherPageState extends State<OtherPage> {
   @override
   void initState() {
     super.initState();
-    _firstNameController = TextEditingController(text: widget.userRepository.firstName);
-    _lastNameController = TextEditingController(text: widget.userRepository.lastName);
-    _phoneNumberController = TextEditingController(text: widget.userRepository.phoneNumber);
-    _emailController = TextEditingController(text: widget.userRepository.email);
+    _firstNameController = TextEditingController();
+    _lastNameController = TextEditingController();
+    _phoneNumberController = TextEditingController();
+    _emailController = TextEditingController();
     // Load user data
     _loadData();
   }
@@ -41,14 +41,18 @@ class OtherPageState extends State<OtherPage> {
     });
   }
 
-// text editing controller disposing
-  @override
-  void dispose() {
+  Future<void> _saveData() async {
     widget.userRepository.firstName = _firstNameController.text;
     widget.userRepository.lastName = _lastNameController.text;
     widget.userRepository.phoneNumber = _phoneNumberController.text;
     widget.userRepository.email = _emailController.text;
-    widget.userRepository.saveData(); // Save data on exit
+    await widget.userRepository.saveData();
+  }
+
+// text editing controller disposing
+  @override
+  void dispose() {
+    _saveData(); // Save data on exit
 
     _firstNameController.dispose();
     _lastNameController.dispose();
@@ -118,6 +122,7 @@ class OtherPageState extends State<OtherPage> {
                       labelText: "First Name",
                       border: OutlineInputBorder(),
                     ),
+                    onSubmitted: (_) => _saveData(), // Save when user presses "Enter"
                   ),
                   const SizedBox(height: 16), // Adds spacing
                   TextField(
@@ -126,6 +131,7 @@ class OtherPageState extends State<OtherPage> {
                       labelText: "Last Name",
                       border: OutlineInputBorder(),
                     ),
+                    onSubmitted: (_) => _saveData(), // Save when user presses "Enter"
                   ),
                   const SizedBox(height: 16), // Adds spacing
                   Row(
@@ -138,6 +144,7 @@ class OtherPageState extends State<OtherPage> {
                             labelText: "Phone Number",
                             border: OutlineInputBorder(),
                           ),
+                          onSubmitted: (_) => _saveData(), // Save when user presses "Enter"
                         ),
                       ),
                       const SizedBox(width: 8), // Space between TextField and Button
@@ -163,6 +170,7 @@ class OtherPageState extends State<OtherPage> {
                             labelText: "Email Address",
                             border: OutlineInputBorder(),
                           ),
+                          onSubmitted: (_) => _saveData(), // Save when user presses "Enter"
                         ),
                       ),
                       const SizedBox(width: 8), // Space between TextField and Button
