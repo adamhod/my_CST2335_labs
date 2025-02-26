@@ -55,6 +55,16 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _loginController = TextEditingController(text: widget.userRepository.firstName);
     _passwordController = TextEditingController(text: widget.userRepository.lastName);
+    // Load data asynchronously
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    await widget.userRepository.loadData();
+    setState(() {
+      _loginController.text = widget.userRepository.firstName;
+      _passwordController.text = widget.userRepository.lastName;
+    });
   }
 
   @override

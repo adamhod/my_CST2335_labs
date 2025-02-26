@@ -27,6 +27,18 @@ class OtherPageState extends State<OtherPage> {
     _lastNameController = TextEditingController(text: widget.userRepository.lastName);
     _phoneNumberController = TextEditingController(text: widget.userRepository.phoneNumber);
     _emailController = TextEditingController(text: widget.userRepository.email);
+    // Load user data
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    await widget.userRepository.loadData();
+    setState(() {
+      _firstNameController.text = widget.userRepository.firstName;
+      _lastNameController.text = widget.userRepository.lastName;
+      _phoneNumberController.text = widget.userRepository.phoneNumber;
+      _emailController.text = widget.userRepository.email;
+    });
   }
 
 // text editing controller disposing
