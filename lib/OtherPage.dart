@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'user_repository.dart';
 
 
 
 class OtherPage extends StatefulWidget {
+  final UserRepository userRepository;
+  const OtherPage({Key? key, required this.userRepository}) : super(key: key);
+
   @override
   State<OtherPage> createState() => OtherPageState();
 }
@@ -19,15 +23,21 @@ class OtherPageState extends State<OtherPage> {
   @override
   void initState() {
     super.initState();
-    _firstNameController = TextEditingController();
-    _lastNameController = TextEditingController();
-    _phoneNumberController = TextEditingController();
-    _emailController = TextEditingController();
+    _firstNameController = TextEditingController(text: widget.userRepository.firstName);
+    _lastNameController = TextEditingController(text: widget.userRepository.lastName);
+    _phoneNumberController = TextEditingController(text: widget.userRepository.phoneNumber);
+    _emailController = TextEditingController(text: widget.userRepository.email);
   }
 
 // text editing controller disposing
   @override
   void dispose() {
+    widget.userRepository.firstName = _firstNameController.text;
+    widget.userRepository.lastName = _lastNameController.text;
+    widget.userRepository.phoneNumber = _phoneNumberController.text;
+    widget.userRepository.email = _emailController.text;
+    widget.userRepository.saveData(); // Save data on exit
+
     _firstNameController.dispose();
     _lastNameController.dispose();
     _phoneNumberController.dispose();
@@ -61,10 +71,9 @@ class OtherPageState extends State<OtherPage> {
 
   // Function to send an email
   void _sendEmail() async {
-    final String email = _emailController.text;
     final Uri emailUri = Uri(
       scheme: 'mailto',
-      path: email,
+      path: _emailController.text,
       queryParameters: {
         'subject': 'Hello',
         'body': 'This is a pre-filled email body.'

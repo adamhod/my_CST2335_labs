@@ -53,13 +53,15 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _loginController = TextEditingController();
-    _passwordController = TextEditingController();
-    _loadSavedData();
+    _loginController = TextEditingController(text: widget.userRepository.firstName);
+    _passwordController = TextEditingController(text: widget.userRepository.lastName);
   }
 
   @override
   void dispose() {
+    widget.userRepository.firstName = _loginController.text;
+    widget.userRepository.lastName = _passwordController.text;
+    widget.userRepository.saveData(); // Save data before exiting
     _loginController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -118,7 +120,6 @@ class _MyHomePageState extends State<MyHomePage> {
     //Navigator.pushNamed(context, '/otherPage'); // brings to other page
     _showOptionsDialog();
     //_handlePasswordSubmission(_passwordController.text);
-
 
   }
 
