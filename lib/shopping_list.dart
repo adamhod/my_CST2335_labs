@@ -1,0 +1,125 @@
+import 'package:flutter/material.dart';
+
+
+class shopping_list extends StatefulWidget {
+
+  @override
+  State<shopping_list> createState() => _shopping_listState();
+
+}
+
+class _shopping_listState extends State<shopping_list> {
+
+  late TextEditingController _itemName;
+  late TextEditingController _itemCount;
+  List<Map<String, String>> words = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _itemName = TextEditingController();
+    _itemCount = TextEditingController();
+  }
+
+  void _addToList() {
+    setState(() {
+
+      if (_itemName.text.isNotEmpty && _itemCount.text.isNotEmpty) {
+        words.add({
+          "item": _itemName.text,
+          "quantity": _itemCount.text
+        });
+      }
+
+      _itemName.clear();
+      _itemCount.clear();
+    });
+  }
+  
+  //removes item from list
+  void _removeItem(int index) {
+    setState(() {
+      words.removeAt(index);
+    });
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text("Shopping List"),
+      ),
+
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _itemName,
+                    decoration: InputDecoration(labelText: "Type item name here"),
+                  ),
+                ),
+                SizedBox(width: 10), // Spacing
+                Expanded(
+                  child: TextField(
+                    controller: _itemCount,
+                    decoration: InputDecoration(labelText: "Type amount of item here"),
+                  ),
+                ),
+                SizedBox(width: 10), // Spacing
+                ElevatedButton(
+                  onPressed: _addToList,
+                  child: Text("Add"),
+                ),
+              ]
+            ),
+            //where we will add the input boxes for the list
+
+            //the list
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: words.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onLongPress: () => _removeItem(index),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "${index + 1}: ", // Displays position number
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    "${words[index]['item']}, Quantity: ${words[index]['quantity']}",
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                    ),
+                  ),
+                ]
+              ),
+            ),
+          ]
+        ),
+      ),
+    );
+
+  }
+
+
+
+
+}

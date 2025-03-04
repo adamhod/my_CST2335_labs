@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'user_repository.dart';
+import 'shopping_list.dart';
+
 
 
 
@@ -179,6 +181,17 @@ class OtherPageState extends State<OtherPage> {
                         onPressed: _sendEmail,
                       ),
                     ],
+                  ),
+                  const SizedBox(height: 16), // Adds spacing
+                  // button to take user to shopping list page
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => shopping_list()),
+                      );
+                    },
+                    child: const Text("Shopping List"),
                   ),
                 ]
             ),
