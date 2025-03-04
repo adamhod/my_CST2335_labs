@@ -111,8 +111,4 @@ class _shopping_listState extends State<shopping_list> {
     );
 
   }
-
-
-
-
 }
