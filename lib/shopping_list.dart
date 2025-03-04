@@ -82,34 +82,27 @@ class _shopping_listState extends State<shopping_list> {
 
             //the list
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                        itemCount: words.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onLongPress: () => _removeItem(index),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "${index + 1}: ", // Displays position number
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    "${words[index]['item']}, Quantity: ${words[index]['quantity']}",
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        }
-                    ),
-                  ),
-                ]
+              child: Container(
+                alignment: Alignment.center,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: words.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onLongPress: () => _removeItem(index),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("${index + 1}: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text("${words[index]['item']}, Quantity: ${words[index]['quantity']}"),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ]
