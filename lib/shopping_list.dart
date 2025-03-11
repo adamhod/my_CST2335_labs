@@ -27,39 +27,31 @@ class _shopping_listState extends State<shopping_list> {
     _itemCount = TextEditingController();
   }
 
+  /// Initializes the database and loads existing items
   Future<void> _initializeDatabase() async {
     database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     _loadItems();
   }
 
+  /// Loads all items from the database and updates the list
   Future<void> _loadItems() async {
-    final SLE = await database.shopping_listDAO.findAllItems();
+    final items = await database.shopping_listDAO.findAllItems();
     setState(() {
-      words = SLE;
+      words = items.map((sle) => {"id": sle.id.toString(), "item": sle.item, "quantity": sle.quantity}).toList();
     });
   }
 
 
-  void _addToList() {
-    setState(() {
 
-      if (_itemName.text.isNotEmpty && _itemCount.text.isNotEmpty) {
-        words.add({
-          "item": _itemName.text,
-          "quantity": _itemCount.text
-        });
-      }
+  /// Removes an item from the list and deletes it from the database
+  Future<void> _removeItem(int index) async {
+    final id = int.tryParse(words[index]["id"] ?? "");
 
-      _itemName.clear();
-      _itemCount.clear();
-    });
-  }
-  
-  //removes item from list
-  void _removeItem(int index) {
-    setState(() {
-      words.removeAt(index);
-    });
+    if (id != null) {
+    final sleToDelete = SLE(id: id, item: words[index]["item"]!, quantity: words[index]["quantity"]!);
+    await database.shopping_listDAO.deleteItem(sleToDelete);
+    _loadItems(); // Refresh UI
+    }
   }
 
 
