@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'AppDatabase.dart';
+import 'SLE.dart';
+import 'Shopping_listDAO.dart';
+
 
 // lab 7
 class shopping_list extends StatefulWidget {
@@ -12,14 +16,29 @@ class _shopping_listState extends State<shopping_list> {
 
   late TextEditingController _itemName;
   late TextEditingController _itemCount;
+  late AppDatabase database;
   List<Map<String, String>> words = [];
 
   @override
   void initState() {
     super.initState();
+    _initializeDatabase();
     _itemName = TextEditingController();
     _itemCount = TextEditingController();
   }
+
+  Future<void> _initializeDatabase() async {
+    database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    _loadItems();
+  }
+
+  Future<void> _loadItems() async {
+    final SLE = await database.shopping_listDAO.findAllItems();
+    setState(() {
+      words = SLE;
+    });
+  }
+
 
   void _addToList() {
     setState(() {

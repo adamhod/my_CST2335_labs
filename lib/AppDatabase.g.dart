@@ -140,7 +140,7 @@ class _$Shopping_listDAO extends Shopping_listDAO {
         mapper: (Map<String, Object?> row) => SLE(
             id: row['id'] as int?,
             item: row['item'] as String,
-            quantity: row['quantity'] as int));
+            quantity: row['quantity'] as String));
   }
 
   @override
@@ -149,7 +149,7 @@ class _$Shopping_listDAO extends Shopping_listDAO {
         mapper: (Map<String, Object?> row) => SLE(
             id: row['id'] as int?,
             item: row['item'] as String,
-            quantity: row['quantity'] as int),
+            quantity: row['quantity'] as String),
         arguments: [id],
         queryableName: 'SLE',
         isView: false);

@@ -11,4 +11,7 @@ abstract class Shopping_listDAO {
 
   @insert
   Future<void> insertPerson(SLE sle);
+
+  @delete
+  Future<void> deleteItem(SLE sle);
 }
