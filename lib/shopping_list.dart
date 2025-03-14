@@ -14,45 +14,56 @@ class shopping_list extends StatefulWidget {
 
 class _shopping_listState extends State<shopping_list> {
 
-  late TextEditingController _itemName;
-  late TextEditingController _itemCount;
+  late TextEditingController _itemNameController;
+  late TextEditingController _itemQuantityController;
   late AppDatabase database;
-  List<Map<String, String>> words = [];
+  late Shopping_listDAO shopping_listDAO;
+  List<SLE> items = [];
+
 
   @override
   void initState() {
     super.initState();
     _initializeDatabase();
-    _itemName = TextEditingController();
-    _itemCount = TextEditingController();
+    _itemNameController = TextEditingController();
+    _itemQuantityController = TextEditingController();
+
   }
 
-  /// Initializes the database and loads existing items
+  // Initializes database and loads existing items
   Future<void> _initializeDatabase() async {
-    database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    database = await $FloorAppDatabase.databaseBuilder('shopping_list.db').build();
+    shopping_listDAO = database.shopping_listDAO;
     _loadItems();
   }
 
-  /// Loads all items from the database and updates the list
+  // Load items from database
   Future<void> _loadItems() async {
-    final items = await database.shopping_listDAO.findAllItems();
+    final fetchedItems = await shopping_listDAO.getAllItems();
     setState(() {
-      words = items.map((sle) => {"id": sle.id.toString(), "item": sle.item, "quantity": sle.quantity}).toList();
+      items = fetchedItems;
     });
   }
 
+  // Add a new item to database
+  Future<void> _addToList() async {
+    final String name = _itemNameController.text.trim();
+    final int quantity = _itemQuantityController.text.trim() as int;
 
-
-  /// Removes an item from the list and deletes it from the database
-  Future<void> _removeItem(int index) async {
-    final id = int.tryParse(words[index]["id"] ?? "");
-
-    if (id != null) {
-    final sleToDelete = SLE(id: id, item: words[index]["item"]!, quantity: words[index]["quantity"]!);
-    await database.shopping_listDAO.deleteItem(sleToDelete);
-    _loadItems(); // Refresh UI
-    }
+    final newItem = SLE(item: name, quantity: quantity);
+    await shopping_listDAO.insertItem(newItem);
+    _itemNameController.clear();
+    _itemQuantityController.clear();
   }
+
+  // Remove item from database
+  Future<void> _removeItem(int index) async {
+    final itemToRemove = items[index];
+    await shopping_listDAO.removeItem(itemToRemove);
+    _loadItems();
+  }
+
+
 
 
   @override
@@ -71,14 +82,14 @@ class _shopping_listState extends State<shopping_list> {
               children: [
                 Expanded(
                   child: TextField(
-                    controller: _itemName,
+                    controller: _itemNameController,
                     decoration: InputDecoration(labelText: "Type item name here"),
                   ),
                 ),
                 SizedBox(width: 10), // Spacing
                 Expanded(
                   child: TextField(
-                    controller: _itemCount,
+                    controller: _itemQuantityController,
                     decoration: InputDecoration(labelText: "Type amount of item here"),
                   ),
                 ),
@@ -93,28 +104,19 @@ class _shopping_listState extends State<shopping_list> {
 
             //the list
             Expanded(
-              child: Container(
-                alignment: Alignment.center,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: words.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onLongPress: () => _removeItem(index),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("${index + 1}: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text("${words[index]['item']}, Quantity: ${words[index]['quantity']}"),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+              child: ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onLongPress: () => _removeItem(index),
+                    child: ListTile(
+                      title: Text("${items[index].item}"),
+                      subtitle: Text("Quantity: ${items[index].quantity}"),
+                      trailing: Icon(Icons.delete, color: Colors.red),
+                    ),
+                  );
+                }
+              )
             ),
           ]
         ),

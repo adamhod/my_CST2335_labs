@@ -115,7 +115,7 @@ class _$Shopping_listDAO extends Shopping_listDAO {
   _$Shopping_listDAO(
     this.database,
     this.changeListener,
-  )   : _queryAdapter = QueryAdapter(database, changeListener),
+  )   : _queryAdapter = QueryAdapter(database),
         _sLEInsertionAdapter = InsertionAdapter(
             database,
             'SLE',
@@ -123,8 +123,16 @@ class _$Shopping_listDAO extends Shopping_listDAO {
                   'id': item.id,
                   'item': item.item,
                   'quantity': item.quantity
-                },
-            changeListener);
+                }),
+        _sLEDeletionAdapter = DeletionAdapter(
+            database,
+            'SLE',
+            ['id'],
+            (SLE item) => <String, Object?>{
+                  'id': item.id,
+                  'item': item.item,
+                  'quantity': item.quantity
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -134,29 +142,25 @@ class _$Shopping_listDAO extends Shopping_listDAO {
 
   final InsertionAdapter<SLE> _sLEInsertionAdapter;
 
+  final DeletionAdapter<SLE> _sLEDeletionAdapter;
+
   @override
-  Future<List<SLE>> findAllItems() async {
+  Future<List<SLE>> getAllItems() async {
     return _queryAdapter.queryList('SELECT * FROM SLE',
         mapper: (Map<String, Object?> row) => SLE(
             id: row['id'] as int?,
             item: row['item'] as String,
-            quantity: row['quantity'] as String));
+            quantity: row['quantity'] as int));
   }
 
   @override
-  Stream<SLE?> findItemById(int id) {
-    return _queryAdapter.queryStream('SELECT * FROM SLE WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => SLE(
-            id: row['id'] as int?,
-            item: row['item'] as String,
-            quantity: row['quantity'] as String),
-        arguments: [id],
-        queryableName: 'SLE',
-        isView: false);
+  Future<int> insertItem(SLE item) {
+    return _sLEInsertionAdapter.insertAndReturnId(
+        item, OnConflictStrategy.abort);
   }
 
   @override
-  Future<void> insertPerson(SLE sle) async {
-    await _sLEInsertionAdapter.insert(sle, OnConflictStrategy.abort);
+  Future<int> removeItem(SLE item) {
+    return _sLEDeletionAdapter.deleteAndReturnChangedRows(item);
   }
 }
