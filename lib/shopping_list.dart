@@ -105,19 +105,28 @@ class _shopping_listState extends State<shopping_list> {
 
             //the list
             Expanded(
-              child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onLongPress: () => _removeItem(index),
-                    child: ListTile(
-                      title: Text("${items[index].item}"),
-                      subtitle: Text("Quantity: ${items[index].quantity}"),
-                      trailing: Icon(Icons.delete, color: Colors.red),
-                    ),
-                  );
-                }
-              )
+              child: Container(
+                alignment: Alignment.center,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onLongPress: () => _removeItem(index),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("${index + 1}: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text("${items[index].item}, Quantity: ${items[index].quantity}"),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ]
         ),
