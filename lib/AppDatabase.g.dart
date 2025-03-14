@@ -96,7 +96,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `SLE` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `item` TEXT NOT NULL, `quantity` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `SLE` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `item` TEXT NOT NULL, `quantity` TEXT NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -150,17 +150,16 @@ class _$Shopping_listDAO extends Shopping_listDAO {
         mapper: (Map<String, Object?> row) => SLE(
             id: row['id'] as int?,
             item: row['item'] as String,
-            quantity: row['quantity'] as int));
+            quantity: row['quantity'] as String));
   }
 
   @override
-  Future<int> insertItem(SLE item) {
-    return _sLEInsertionAdapter.insertAndReturnId(
-        item, OnConflictStrategy.abort);
+  Future<void> insertItem(SLE item) async {
+    await _sLEInsertionAdapter.insert(item, OnConflictStrategy.abort);
   }
 
   @override
-  Future<int> removeItem(SLE item) {
-    return _sLEDeletionAdapter.deleteAndReturnChangedRows(item);
+  Future<void> removeItem(SLE item) async {
+    await _sLEDeletionAdapter.delete(item);
   }
 }

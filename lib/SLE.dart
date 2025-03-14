@@ -5,7 +5,7 @@ class SLE {
   @PrimaryKey(autoGenerate: true)
   final int? id;
   final String item;
-  final int quantity;
+  final String quantity;
 
   SLE({this.id, required this.item, required this.quantity});
 }

@@ -7,8 +7,8 @@ abstract class Shopping_listDAO {
   Future<List<SLE>> getAllItems();
 
   @insert
-  Future<int> insertItem(SLE item);
+  Future<void> insertItem(SLE item);
 
   @delete
-  Future<int> removeItem(SLE item);
+  Future<void> removeItem(SLE item);
 }

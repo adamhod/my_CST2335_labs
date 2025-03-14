@@ -48,12 +48,13 @@ class _shopping_listState extends State<shopping_list> {
   // Add a new item to database
   Future<void> _addToList() async {
     final String name = _itemNameController.text.trim();
-    final int quantity = _itemQuantityController.text.trim() as int;
+    final String quantity = _itemQuantityController.text.trim();
 
     final newItem = SLE(item: name, quantity: quantity);
     await shopping_listDAO.insertItem(newItem);
     _itemNameController.clear();
     _itemQuantityController.clear();
+    _loadItems();
   }
 
   // Remove item from database
