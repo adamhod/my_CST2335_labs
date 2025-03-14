@@ -12,7 +12,7 @@ class _shopping_listState extends State<shopping_list> {
 
   late TextEditingController _itemName;
   late TextEditingController _itemCount;
-  List<Map<String, String>> words = [];
+  List<Map<dynamic, String>> words = [];
 
   @override
   void initState() {
@@ -27,7 +27,7 @@ class _shopping_listState extends State<shopping_list> {
       if (_itemName.text.isNotEmpty && _itemCount.text.isNotEmpty) {
         words.add({
           "item": _itemName.text,
-          "quantity": _itemCount.text
+          "quantity": _itemCount.text,
         });
       }
 
@@ -68,6 +68,7 @@ class _shopping_listState extends State<shopping_list> {
                 Expanded(
                   child: TextField(
                     controller: _itemCount,
+                    keyboardType: TextInputType.number, // Opens numeric keyboard
                     decoration: InputDecoration(labelText: "Type amount of item here"),
                   ),
                 ),
