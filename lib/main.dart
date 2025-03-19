@@ -1,261 +1,198 @@
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
-import 'OtherPage.dart';
-import 'user_repository.dart';
+import 'ToDoDAO.dart';
+import 'ToDoItem.dart';
+import 'database.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter binding is ready
-  UserRepository userRepository = UserRepository();
-  await userRepository.loadData(); // Load stored data before app starts
-
-  runApp(MyApp(userRepository: userRepository));
+void main() {
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final UserRepository userRepository;
+  const MyApp({super.key});
 
-  const MyApp({Key? key, required this.userRepository}) : super(key: key);
-
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'CST2335 Samples',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        // This is the theme of your application.
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.blue,
+            secondary: Colors.green,
+            primary: Colors.red),
         useMaterial3: true,
       ),
-    initialRoute: '/',  // The default (starting) route
-    routes: {
-      '/': (context) => MyHomePage(title: 'Flutter Demo Home Page', userRepository: userRepository),
-      '/otherPage': (context) => OtherPage(userRepository: userRepository),      },
+      debugShowCheckedModeBanner: false,
+      home: MyHomePage(title: 'Week 10 - Tablet and Phone Layout'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  final String title;
-  final UserRepository userRepository;
+  const MyHomePage({super.key, required this.title});
 
-  const MyHomePage({Key? key, required this.title, required this.userRepository}) : super(key: key);
+  final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  double _counter = 0.0;
-  double myFontSize = 30.0;
-  late TextEditingController _loginController;
-  late TextEditingController _passwordController;
-  String _imagePath = "images/img.png";
-  final EncryptedSharedPreferences _encryptedPrefs = EncryptedSharedPreferences();
+  List<ToDoItem> todoList = <ToDoItem>[];
+  late TextEditingController _inputController;
+  late ToDoDAO dao;
+  ToDoItem? selectedItem = null;
+  var isChecked = false;
 
-  @override
+  @override //same as in java
   void initState() {
-    super.initState();
-    _loginController = TextEditingController();
-    _passwordController = TextEditingController();
-    // Load data asynchronously
-    _loadSavedData();
-  }
+    super.initState(); //call the parent initState()
+    _inputController = TextEditingController();
 
-  Future<void> _loadData() async {
-    await widget.userRepository.loadData();
-    setState(() {
-      _loginController.text = widget.userRepository.firstName;
-      _passwordController.text = widget.userRepository.lastName;
+    $FloorToDoDatabase
+        .databaseBuilder('todo_database.db')
+        .build()
+        .then((database) async {
+      dao = database.toDoDAO;
+      //get Items from database:
+      var it = await dao.getAllItems();
+      setState(() {
+        todoList = it; //Future<> , asynchronous
+      });
     });
   }
 
   @override
   void dispose() {
-    widget.userRepository.firstName = _loginController.text;
-    widget.userRepository.lastName = _passwordController.text;
-    widget.userRepository.saveData(); // Save data before exiting
-    _loginController.dispose();
-    _passwordController.dispose();
     super.dispose();
-  }
-
-  // Method to load saved username and password on app start
-  void _loadSavedData() async {
-    String? savedUsername = await _encryptedPrefs.getString("username");
-    String? savedPassword = await _encryptedPrefs.getString("password");
-
-    if (savedUsername != null && savedPassword != null) {
-      setState(() {
-        _loginController.text = savedUsername;
-        _passwordController.text = savedPassword;
-      });
-
-      // Show SnackBar with "Undo" action
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text("Previous login name and password loaded."),
-          action: SnackBarAction(
-            label: "Undo",
-            onPressed: () {
-              // Clear the TextFields but keep the saved data in SharedPreferences
-              setState(() {
-                _loginController.text = "";
-                _passwordController.text = "";
-              });
-            },
-          ),
-        ),
-      );
-    }
-  }
-
-  //increments the counter
-  void _incrementCounter() {
-    setState(() {
-      if (_counter < 99.0) _counter++;
-    });
-  }
-
-  //checks if password matches to set apropreate image
-  void _handlePasswordSubmission(String password) {
-    setState(() {
-      if (password == "QWERTY123") {
-        _imagePath = "images/img_1.png";
-      } else {
-        _imagePath = "images/img_2.png";
-      }
-    });
-  }
-
-  //what happens when login button is clicked
-  void _handleLogin() {
-    //Navigator.pushNamed(context, '/otherPage'); // brings to other page
-    _showOptionsDialog();
-    //_handlePasswordSubmission(_passwordController.text);
-
-  }
-
-  //handles details of logging in
-  void _otherPageLogin(String password) {
-    if (password == "QWERTY123") {
-      Navigator.pushNamed(context, '/otherPage');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Incorrect password.")),
-      );
-    }
-
-  }
-
-  void _showWelcomeSnackBar() async {
-    // Retrieve the saved username from EncryptedSharedPreferences
-    String? savedUsername = await _encryptedPrefs.getString("username");
-
-    // Check if the username exists
-    String message = (savedUsername != null && savedUsername.isNotEmpty)
-        ? "Welcome, $savedUsername!"
-        : "Welcome, Guest!";
-
-    // Show SnackBar with dynamic message
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 3),
-      ),
-    );
-  }
-
-  // lab 4
-  void _showOptionsDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Save User Information?'),
-          content: const Text('Would you like to save your username and password?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("Save"),
-              onPressed: () async {
-                await _encryptedPrefs.setString("username", _loginController.text);
-                await _encryptedPrefs.setString("password", _passwordController.text);
-                Navigator.of(context).pop();
-                _otherPageLogin(_passwordController.text);
-                _showWelcomeSnackBar();
-              },
-            ),
-            TextButton(
-              child: const Text("Delete"),
-              onPressed: () async {
-                await _encryptedPrefs.remove("username");
-                await _encryptedPrefs.remove("password");
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Information deleted.")),
-                );
-              },
-            ),
-            TextButton(
-              child: const Text("Cancel"),
-              onPressed: () async {
-                await _encryptedPrefs.remove("username");
-                await _encryptedPrefs.remove("password");
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-    //_handlePasswordSubmission(_passwordController.text);
+    _inputController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      // body start
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            TextField(
-              controller: _loginController,
-              decoration: const InputDecoration(
-                labelText: "Login",
+        appBar: AppBar(
+            backgroundColor: Theme
+                .of(context)
+                .colorScheme
+                .inversePrimary,
+            title: Text(widget.title)),
+        body: reactiveLayout(),
+        floatingActionButton: FloatingActionButton(
+            onPressed: addItem,
+            tooltip: 'Add Item',
+            child: const Icon(Icons.add)));
+  }
+
+  void addItem() {
+    if (_inputController.text.isNotEmpty) {
+      setState(() {
+        var newItem = ToDoItem(ToDoItem.ID++, _inputController.text);
+        todoList.add(newItem);
+        dao.insertItem(newItem);
+        _inputController.clear();
+      });
+    } else {
+      var snackBar = SnackBar(content: Text('Input field is required'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
+
+  Widget reactiveLayout() {
+    var size = MediaQuery
+        .sizeOf(context);
+    var height = size.height;
+    var width = size.width;
+
+    if ((width > height) && (width > 720)) //landscape// {
+        {
+      return Row(children: [
+        Expanded(flex: 1, child: toDoList()),
+        Expanded(flex: 2, child: detailsPage())
+      ]);
+    }
+
+    else //portrait mode
+        {
+      if (selectedItem == null)
+        return toDoList();
+      else { //something is selected
+        return detailsPage();
+      }
+    }
+  }
+
+  Widget detailsPage() {
+    TextStyle mystyle = TextStyle(fontSize: 40.0);
+
+    return Column(children: [
+
+      if(selectedItem == null)
+        Text("Please select something from the list", style: mystyle)
+      else
+        Text("You selected:" + selectedItem!.todoItem, style: mystyle)
+      //
+      ,
+      ElevatedButton(child: Text("Ok"), onPressed: () {
+        //update GUI:
+        setState(() {
+          selectedItem = null; //clear the selection
+        });
+      })
+
+    ]);
+  }
+
+  Widget toDoList() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(children: [
+            Flexible(child:
+            TextField(controller: _inputController,
+              decoration: InputDecoration(
+                hintText: "Type a task here",
+                labelText: "Add a task",
                 border: OutlineInputBorder(),
               ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                labelText: "Password",
-                border: OutlineInputBorder(),
-              ),
-              obscureText: true,
-              onSubmitted: _handlePasswordSubmission,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _handleLogin,
-              child: const Text("Login"),
-            ),
-            Image.asset(
-              _imagePath,
-              width: 300,
-              height: 300,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+            )),
+
+            ElevatedButton(onPressed: () {
+              //what was typed is:
+              var input = _inputController.value.text;
+              //generate UNIQUE ids
+              var todoItem = ToDoItem(ToDoItem.ID++, input);
+              dao.insertItem(todoItem);
+
+              setState(() { //redraw the GUI
+
+                todoList.add(todoItem); //add the item to the LIST
+
+                _inputController.text = ""; //reset the textField
+              });
+            }, //Lambda, or anonymous function
+              child: Text("Add ToDO"),)
+          ],),
+          Flexible(child:
+          ListView.builder(
+              itemCount: todoList.length,
+              itemBuilder: (ctx, rowNum) {
+                return
+                  GestureDetector(
+                      onTap: () {
+                        setState(() { //redraw the GUI:
+                          selectedItem = todoList[rowNum];
+                        });
+                      },
+                      child:
+                      Text("Item $rowNum = ${todoList[rowNum].todoItem }",
+                        style: TextStyle(fontSize: 30.0),));
+              }))
+        ],
       ),
     );
-  }
-}
+  } //end of reactiveLayout()
 
+}
