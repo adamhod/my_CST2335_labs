@@ -99,6 +99,15 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void deleteItem() {
+    setState(() {
+      dao.deleteItem(selectedItem!);
+      todoList.remove(selectedItem);
+      var snackBar = SnackBar(content: Text('Item: ' + selectedItem!.todoItem + ' Deleted'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
+  }
+
   Widget reactiveLayout() {
     var size = MediaQuery
         .sizeOf(context);
@@ -137,6 +146,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ElevatedButton(child: Text("Ok"), onPressed: () {
         //update GUI:
         setState(() {
+          selectedItem = null; //clear the selection
+        });
+      })
+      ,
+      ElevatedButton(child: Text("Delete"), onPressed: () {
+        //update GUI:
+        setState(() {
+          deleteItem();
           selectedItem = null; //clear the selection
         });
       })
